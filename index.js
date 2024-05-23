@@ -608,9 +608,27 @@ function inject (bot) {
     bot.setControlState('forward', true)
     bot.setControlState('jump', false)
 
+    let sprintJumpIsFaster = false
+    if (stateMovements.allowSprinting && physics.canSprintJump(path)) {
+      const sprintJumpState = physics.simulateUntil(
+        state => state.onGround,
+        physics.getController(nextPoint, true, true)
+      )
+      const normalSprintingState = physics.simulateUntil(
+        state => state.onGround,
+        physics.getController(nextPoint, false, true)
+      )
+      if (p.distanceTo(sprintJumpState.pos) > p.distanceTo(normalSprintingState)) {
+        sprintJumpIsFaster = true
+      }
+    }
+
     if (bot.entity.isInWater) {
       bot.setControlState('jump', true)
       bot.setControlState('sprint', false)
+    } else if (stateMovements.allowSprinting && sprintJumpIsFaster) {
+      bot.setControlState('jump', true)
+      bot.setControlState('sprint', true)
     } else if (stateMovements.allowSprinting && physics.canStraightLine(path, true)) {
       bot.setControlState('jump', false)
       bot.setControlState('sprint', true)
