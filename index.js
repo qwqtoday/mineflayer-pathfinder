@@ -618,7 +618,7 @@ function inject (bot) {
         state => state.onGround,
         physics.getController(nextPoint, false, true)
       )
-      if (p.distanceTo(sprintJumpState.pos) > p.distanceTo(normalSprintingState.pos)) {
+      if (nextPoint.distanceTo(sprintJumpState.pos) < nextPoint.distanceTo(normalSprintingState.pos)) {
         sprintJumpIsFaster = true
       }
     }
