@@ -615,10 +615,12 @@ function inject (bot) {
       let normalSprintTicks = 0
       const sprintJumpController = physics.getController(nextPoint, true, true, 0)
       const normalSprintController = physics.getController(nextPoint, false, true, 0)
-      physics.simulateUntil(reached, (state, tick) => () => { sprintJumpController(state, tick); sprintJumpTicks++ }, 20)
-      physics.simulateUntil(reached, (state, tick) => () => { normalSprintController(state, tick); normalSprintTicks++ }, 20)
+      const sprintJumpState = physics.simulateUntil(reached, (state, tick) => () => { sprintJumpController(state, tick); sprintJumpTicks++ }, 20)
+      const normalSprintState = physics.simulateUntil(reached, (state, tick) => () => { normalSprintController(state, tick); normalSprintTicks++ }, 20)
 
       if (sprintJumpTicks < normalSprintTicks) {
+        sprintJumpIsFaster = true
+      } else if (nextPoint.distanceTo(sprintJumpState.pos) < nextPoint.distanceTo(normalSprintState.pos)) {
         sprintJumpIsFaster = true
       }
     }
