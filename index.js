@@ -612,11 +612,13 @@ function inject (bot) {
     if (stateMovements.allowSprinting && physics.canSprintJump(path)) {
       const sprintJumpState = physics.simulateUntil(
         () => false,
-        physics.getController(nextPoint, true, true)
+        physics.getController(nextPoint, true, true),
+        5
       )
       const normalSprintingState = physics.simulateUntil(
         () => false,
-        physics.getController(nextPoint, false, true)
+        physics.getController(nextPoint, false, true),
+        5
       )
       if (nextPoint.distanceTo(sprintJumpState.pos) < nextPoint.distanceTo(normalSprintingState.pos)) {
         sprintJumpIsFaster = true
